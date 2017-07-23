@@ -14,8 +14,9 @@ window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequest
 function get(id) {
     return document.getElementById(id);
 }
+var null_data = [];
 
-var heat = simpleheat('canvas').data(data).max(18),
+var heat = simpleheat('canvas').data(null_data).max(18),
     frame;
 
 function draw() {
@@ -25,12 +26,16 @@ function draw() {
     frame = null;
 }
 
+var x_count = 0;
+var y_count = 0
+while (x_count < 200){
+  heat.add([x_count, y_count, 1]);
+  x_count +=1 ;
+  y_count +=1 ;
+}
+
 draw();
 
-get('canvas').onmousemove = function (e) {
-    heat.add([e.layerX, e.layerY, 1]);
-    frame = frame || window.requestAnimationFrame(draw);
-};
 
 var radius = get('radius'),
     blur = get('blur'),
@@ -40,6 +45,9 @@ radius[changeType] = blur[changeType] = function (e) {
     heat.radius(+radius.value, +blur.value);
     frame = frame || window.requestAnimationFrame(draw);
 };
+
+
+
 
 </script>
 
