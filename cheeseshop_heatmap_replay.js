@@ -23,8 +23,6 @@ var null_data = [];
 // create the heatmap
 var heat = simpleheat('canvas').data(null_data).max(18),
     frame;
-heat.radius(15, 10);
-
 
 function draw() {
     //console.time('draw');
@@ -37,14 +35,13 @@ function draw() {
 // translate notes
 // 2263 coordinates = 422 pixels
 
-var map_name = "unset";
 
 var translate_coordinates_cache = function (x_game, y_game){
   // upper left corner = -2000, 3250
   // scale factor = 5.5
-  pos_x = -3840;
-  pos_y = 3072;
-  scale_factor = 6;
+  pox_x = -2000;
+  pos_y = 3250;
+  scale_factor = 5.5;
 
   x_prime = (x_game - pos_x) / scale_factor;
   y_prime = (pos_y - y_game) / scale_factor;
@@ -53,24 +50,23 @@ var translate_coordinates_cache = function (x_game, y_game){
   return { "x": x_prime, "y":  y_prime};
 }
 
-// respond to websocket messages
+// pull data from replay endpoint
 connection.onmessage = function(msg){
   //console.log("message recieved, captian");
   payload = JSON.parse(msg.data);
   if ("allplayers" in payload){
     // get positional data points, draw
 
-    Object.keys(payload.allplayers).forEach ( function(player_id, index) {
-      console.log("player id: " + player_id);
-      // get position of player  - translate into heatmap coordinates - display
-      position = payload.allplayers[player_id].position.split(",").map(parseFloat);
-      console.log(payload.allplayers[player_id].name + " " + payload.allplayers[player_id].team );
-      console.log(position);
-      updated_position = (translate_coordinates_cache(position[0], position[1]));
-      console.log(updated_position);
-      heat.add([updated_position["x"], updated_position["y"], 2]);
-      frame = frame || window.requestAnimationFrame(draw);
-    });
+    player_1_id = Object.keys(payload.allplayers)[0];
+    console.log("player id: " + player_1_id);
+    // get position of player  - translate into heatmap coordinates - display
+    position = payload.allplayers[player_1_id].position.split(",").map(parseFloat);
+    console.log(payload.allplayers[player_1_id].name + " " + payload.allplayers[player_1_id].team );
+    console.log(position);
+    updated_position = (translate_coordinates_cache(position[0], position[1]));
+    console.log(updated_position);
+    heat.add([updated_position["x"], updated_position["y"], 2]);
+    frame = frame || window.requestAnimationFrame(draw);
 
 
   }
