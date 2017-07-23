@@ -10,49 +10,6 @@
     <div id="container">
         <canvas id="canvas" width="1024" height="1024"></canvas>
     </div>
-<script>
-window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-                               window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-
-function get(id) {
-    return document.getElementById(id);
-}
-var null_data = [];
-
-var heat = simpleheat('canvas').data(null_data).max(18),
-    frame;
-
-function draw() {
-    console.time('draw');
-    heat.draw();
-    console.timeEnd('draw');
-    frame = null;
-}
-
-var x_count = 0;
-var y_count = 0
-while (x_count < 200){
-  heat.add([x_count, y_count, 1]);
-  x_count +=1 ;
-  y_count +=1 ;
-}
-
-draw();
-
-
-var radius = get('radius'),
-    blur = get('blur'),
-    changeType = 'oninput' in radius ? 'oninput' : 'onchange';
-
-radius[changeType] = blur[changeType] = function (e) {
-    heat.radius(+radius.value, +blur.value);
-    frame = frame || window.requestAnimationFrame(draw);
-};
-
-
-
-
-</script>
-
+    <script src="cheeseshop_heatmap.js"> </script>
   </body>
 </html>
