@@ -36,9 +36,17 @@ function draw() {
 // 2263 coordinates = 422 pixels
 
 
-var translate_coordinates_cache = function (x, y){
+var translate_coordinates_cache = function (x_game, y_game){
   // upper left corner = -2000, 3250
   // scale factor = 5.5
+  pox_x = -2000;
+  pos_y = 3250;
+  scale_factor = 5.5;
+
+  x_prime = (x_game - pos_x) / scale_factor;
+  y_prime = (pos_y - y_game) / scale_factor;
+
+
   return { "x": x_prime, "y":  y_prime};
 }
 
