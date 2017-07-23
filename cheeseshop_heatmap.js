@@ -25,38 +25,51 @@ var heat = simpleheat('canvas').data(null_data).max(18),
     frame;
 
 function draw() {
-    console.time('draw');
+    //console.time('draw');
     heat.draw();
-    console.timeEnd('draw');
+    //console.timeEnd('draw');
     frame = null;
 }
 
 // end simpleheat boilerplate
 
-// Add line in the heatmap
-var x_count = 0;
-var y_count = 0
-while (x_count < 200){
-  heat.add([x_count, y_count, 1]);
-  x_count +=1 ;
-  y_count +=1 ;
-}
 
+var translate_coordinates_cache = function (x, y){
+  var x_prime = x;
+  var y_prime = y;
+  // Flip Y axis
+
+  y_prime = y * -1
+
+  // Add 1500 to move origin to the corner
+
+  x_prime += 1500;
+  y_prime += 1500;
+
+  // Scale
+  var scale_factor = 4.00
+
+  x_prime = x_prime / scale_factor
+  y_prime = y_prime / scale_factor
+
+  return { "x": x_prime, "y":  y_prime};
+}
 
 // respond to websocket messages
 connection.onmessage = function(msg){
-  console.log("message recieved, captian");
+  //console.log("message recieved, captian");
   payload = JSON.parse(msg.data);
   if ("allplayers" in payload){
     // get positional data points, draw
+
     player_1_id = Object.keys(payload.allplayers)[0];
     console.log("player id: " + player_1_id);
-    // get position of player 1
+    // get position of player  - translate into heatmap coordinates - display
     position = payload.allplayers[player_1_id].position.split(",").map(parseFloat);
     console.log(position);
-    x = Math.abs(position[0]);
-    y = Math.abs(position[1]);
-    heat.add([50, y, 1]);
+    updated_position = (translate_coordinates_cache(position[0], position[1]));
+    console.log(updated_position);
+    heat.add([updated_position["x"], updated_position["y"], 2]);
     frame = frame || window.requestAnimationFrame(draw);
 
 
