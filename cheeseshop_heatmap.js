@@ -32,26 +32,13 @@ function draw() {
 }
 
 // end simpleheat boilerplate
+// translate notes
+// 2263 coordinates = 422 pixels
 
 
 var translate_coordinates_cache = function (x, y){
-  var x_prime = x;
-  var y_prime = y;
-  // Flip Y axis
-
-  y_prime = y * -1
-
-  // Add 1500 to move origin to the corner
-
-  x_prime += 1500;
-  y_prime += 1500;
-
-  // Scale
-  var scale_factor = 4.00
-
-  x_prime = x_prime / scale_factor
-  y_prime = y_prime / scale_factor
-
+  // upper left corner = -2000, 3250
+  // scale factor = 5.5
   return { "x": x_prime, "y":  y_prime};
 }
 
@@ -66,6 +53,7 @@ connection.onmessage = function(msg){
     console.log("player id: " + player_1_id);
     // get position of player  - translate into heatmap coordinates - display
     position = payload.allplayers[player_1_id].position.split(",").map(parseFloat);
+    console.log(payload.allplayers[player_1_id].name + " " + payload.allplayers[player_1_id].team );
     console.log(position);
     updated_position = (translate_coordinates_cache(position[0], position[1]));
     console.log(updated_position);
